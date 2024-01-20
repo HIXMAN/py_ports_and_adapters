@@ -1,0 +1,28 @@
+version: "3"
+services:
+  app:
+    build:
+      context: .
+      dockerfile: .docker/app/Dockerfile
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/app
+    depends_on:
+      - database
+      - queue
+
+  database:
+    build:
+      context: .
+      dockerfile: .docker/database/Dockerfile
+    ports:
+      - "3306:3306"
+
+  queue:
+    build:
+      context: .
+      dockerfile: .docker/queue/Dockerfile
+    ports:
+      - "5672:5672"
+      - "15672:15672"
