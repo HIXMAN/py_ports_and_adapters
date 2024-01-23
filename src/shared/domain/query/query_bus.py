@@ -4,10 +4,16 @@ from shared.domain.query.query import Query
 from shared.domain.query.query_listener import QueryListener
 from shared.domain.query.query_result import QueryResult
 
+from injector import inject
+class Other:
+    pass
+
 
 class QueryBus:
-    def __init__(self):
+    @inject
+    def __init__(self, other: Other):
         self.listeners: Set[QueryListener] = set()
+        self.other: other
 
     def add_listener(self, listener: QueryListener) -> None:
         self.listeners.add(listener)
