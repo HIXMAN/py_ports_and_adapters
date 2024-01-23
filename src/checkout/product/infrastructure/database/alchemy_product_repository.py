@@ -1,13 +1,11 @@
 from typing import Optional
 
-from sqlalchemy.orm import Session
-
 from checkout.product.domain.product import Product
 from checkout.product.domain.product_id import ProductId
 from checkout.product.domain.product_repository import ProductRepository
 
 
-class AlchemyShoppingCartRepository(ProductRepository):
+class AlchemyProductRepository(ProductRepository):
 
     def __init__(self, connection: Session):
         self._connection: Session = connection
