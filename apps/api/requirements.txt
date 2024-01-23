@@ -1,9 +1,12 @@
 asgiref==3.7.2
 click==8.1.7
 fastapi==0.68.0
+greenlet==3.0.3
 h11==0.14.0
 injector==0.21.0
 pydantic==1.10.14
+PyMySQL==1.1.0
+SQLAlchemy==2.0.25
 starlette==0.14.2
 typing_extensions==4.9.0
 uvicorn==0.15.0

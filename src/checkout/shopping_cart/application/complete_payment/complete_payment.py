@@ -3,7 +3,6 @@ from injector import inject
 from checkout.product.application.list_products.list_products_query import ListProductsQuery
 from checkout.product.application.list_products.list_products_result import ListProductsResult
 from checkout.shopping_cart.application.complete_payment.complete_payment_command import CompletePaymentCommand
-from checkout.shopping_cart.domain.event.shopping_cart_was_completed import ShoppingCartWasCompleted
 from checkout.shopping_cart.domain.shopping_cart import ShoppingCart
 from checkout.shopping_cart.domain.shopping_cart_id import ShoppingCartId
 from checkout.shopping_cart.domain.shopping_cart_repository import ShoppingCartRepository
@@ -30,7 +29,7 @@ class CompletePayment(CommandListener):
 
     def execute(self, complete_payment_command: CompletePaymentCommand) -> None:
         shopping_cart_id = ShoppingCartId(complete_payment_command.shopping_cart_id)
-
+        self._shopping_cart_repository.save(ShoppingCartId('1'))
         # shopping_cart = self._shopping_cart_repository.find_by_id(shopping_cart_id)
         # total_price = self._calculate_price(shopping_cart)
         # shopping_cart.complete_payment(total_price)

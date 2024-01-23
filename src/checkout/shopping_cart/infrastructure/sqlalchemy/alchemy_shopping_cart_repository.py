@@ -1,5 +1,9 @@
 from typing import Optional
 
+from injector import inject
+from sqlalchemy import text
+from sqlalchemy.orm import Session
+
 from checkout.shopping_cart.domain.shopping_cart import ShoppingCart
 from checkout.shopping_cart.domain.shopping_cart_id import ShoppingCartId
 from checkout.shopping_cart.domain.shopping_cart_repository import ShoppingCartRepository
@@ -7,8 +11,9 @@ from checkout.shopping_cart.domain.shopping_cart_repository import ShoppingCartR
 
 class AlchemyShoppingCartRepository(ShoppingCartRepository):
 
-    # def __init__(self, connection: Session):
-    #     self._connection: Session = connection
+    @inject
+    def __init__(self, connection: Session):
+        self._connection: Session = connection
 
     def find_by_id(self, shopping_cart_id: ShoppingCartId) -> Optional[ShoppingCart]:
         shopping_cart = (
@@ -19,4 +24,7 @@ class AlchemyShoppingCartRepository(ShoppingCartRepository):
         return shopping_cart
 
     def save(self, shopping_cart: ShoppingCartId) -> None:
-        self._connection.add(shopping_cart)
+        connection = self._connection.connection()
+        result = connection.execute(text('SHOW TABLES'))
+        print(result.first())
+        # self._connection.add(shopping_cart)
