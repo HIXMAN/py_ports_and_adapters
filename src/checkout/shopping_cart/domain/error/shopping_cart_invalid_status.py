@@ -1,5 +1,5 @@
-from checkout.shopping_cart.domain.shopping_cart_id import ShoppingCartId
-from checkout.shopping_cart.domain.shopping_cart_status import ShoppingCartStatus
+from checkout.shopping_cart.domain.shopping_cart.shopping_cart_id import ShoppingCartId
+from checkout.shopping_cart.domain.shopping_cart.shopping_cart_status import ShoppingCartStatus
 from shared.domain.domain_exception import DomainException
 
 

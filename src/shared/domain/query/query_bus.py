@@ -2,7 +2,7 @@ from typing import Set
 
 from shared.domain.query.query import Query
 from shared.domain.query.query_listener import QueryListener
-from shared.domain.query.query_result import QueryResult
+from shared.domain.query.query_response import QueryResult
 
 from injector import inject
 class Other:

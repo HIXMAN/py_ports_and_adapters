@@ -1,11 +1,12 @@
+from typing import Dict
+
 from shared.domain.query.query import Query
-from shared.domain.query.query_result import QueryResult
 
 
 class QueryListener:
 
     def is_subscribed(self, query: Query) -> bool:
-        pass
+        raise NotImplementedError
 
-    def execute(self, query: Query) -> QueryResult:
-        pass
+    def execute(self, query: Query) -> Dict:
+        raise NotImplementedError

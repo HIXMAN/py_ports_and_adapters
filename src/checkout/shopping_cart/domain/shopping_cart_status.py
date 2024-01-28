@@ -2,7 +2,7 @@ from enum import Enum
 
 
 class ShoppingCartStatus(Enum):
-    EMPTY = "Empty"
+    CREATED = "Created"
     IN_PROGRESS = "In Progress"
     COMPLETED = "Completed"
     CANCELLED = "Cancelled"

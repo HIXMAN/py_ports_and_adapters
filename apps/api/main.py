@@ -2,13 +2,7 @@ from fastapi import FastAPI
 from injector import Module, Injector
 from sqlalchemy.orm import sessionmaker, Session
 
-from checkout.shopping_cart.application.complete_payment.complete_payment import CompletePayment
-from checkout.shopping_cart.application.complete_payment.complete_payment_command import CompletePaymentCommand
 from checkout.shopping_cart.domain.shopping_cart_repository import ShoppingCartRepository
-from checkout.shopping_cart.infrastructure.sqlalchemy.alchemy_shopping_cart_repository import \
-    AlchemyShoppingCartRepository
-from checkout.shopping_cart.infrastructure.sqlalchemy.base import Base
-from checkout.shopping_cart.infrastructure.sqlalchemy.engine import engine
 from shared.domain.command.command_bus import CommandBus
 
 app = FastAPI()

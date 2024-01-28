@@ -1,4 +1,4 @@
-from checkout.shopping_cart.domain.product_id import ProductId
+from checkout.product.domain.product_id import ProductId
 from checkout.shopping_cart.domain.shopping_cart_line_id import ShoppingCartLineId
 
 

@@ -4,7 +4,7 @@ from shared.domain.event.event import Event
 class EventListener:
 
     def is_subscribed(self, event: Event) -> bool:
-        pass
+        raise NotImplementedError
 
     def execute(self, event: Event) -> None:
-        pass
+        raise NotImplementedError
