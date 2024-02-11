@@ -1,9 +1,12 @@
 asgiref==3.7.2
+cffi==1.16.0
 click==8.1.7
+cryptography==42.0.0
 fastapi==0.68.0
 greenlet==3.0.3
 h11==0.14.0
 injector==0.21.0
+pycparser==2.21
 pydantic==1.10.14
 PyMySQL==1.1.0
 SQLAlchemy==2.0.25

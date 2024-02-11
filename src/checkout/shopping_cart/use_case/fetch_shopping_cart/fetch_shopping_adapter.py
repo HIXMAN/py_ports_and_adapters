@@ -1,6 +1,6 @@
 from typing import Dict
 
-from checkout.shopping_cart.domain.shopping_cart.shopping_cart import ShoppingCart
+from checkout.shopping_cart.domain.shopping_cart import ShoppingCart
 
 
 class FetchShoppingCartAdapter:

@@ -31,6 +31,8 @@ class FetchShoppingCart(QueryListener):
         shopping_cart_id = ShoppingCartId(query.shopping_cart_id)
         shopping_cart = self._shopping_cart_repository.find_by_id(shopping_cart_id)
 
+        print(shopping_cart)
+
         if shopping_cart is None:
             raise ShoppingCartNotFound(shopping_cart_id)
 
