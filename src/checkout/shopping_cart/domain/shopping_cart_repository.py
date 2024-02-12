@@ -8,5 +8,5 @@ class ShoppingCartRepository:
     def find_by_id(self, shopping_cart_id: ShoppingCartId) -> Optional[ShoppingCart]:
         raise NotImplementedError
 
-    def save(self, shopping_cart: ShoppingCartId) -> None:
+    def save(self, shopping_cart: ShoppingCart) -> None:
         raise NotImplementedError

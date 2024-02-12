@@ -12,7 +12,6 @@ from shared.domain.command.command_bus import CommandBus
 
 app = FastAPI()
 
-
 class RepositoryModule(Module):
     def configure(self, binder):
         binder.bind(ShoppingCartRepository, to=AlchemyShoppingCartRepository)
@@ -30,6 +29,8 @@ def read_root():
     command_bus: CommandBus = container.get(CommandBus)
     intent_payment: IntentPayment = container.get(IntentPayment)
     command_bus.add_listener(intent_payment)
-    command_bus.publish(IntentPaymentCommand())
+    intent_payment_command = IntentPaymentCommand(1)
+    command_bus.publish(intent_payment_command)
     return {"ok"}
+
 

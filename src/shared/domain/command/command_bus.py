@@ -1,11 +1,17 @@
 from typing import Set
 
+from injector import inject
+from sqlalchemy.orm import Session
+
 from shared.domain.command.command import Command
 from shared.domain.command.command_listener import CommandListener
 
 
 class CommandBus:
-    def __init__(self):
+
+    @inject
+    def __init__(self, session: Session) -> None:
+        self._session = session
         self.listeners: Set[CommandListener] = set()
 
     def add_listener(self, listener: CommandListener) -> None:
@@ -18,4 +24,4 @@ class CommandBus:
         for listener in self.listeners:
             if listener.is_subscribed(command):
                 listener.execute(command)
-
+        self._session.commit()
