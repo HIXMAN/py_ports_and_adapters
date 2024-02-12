@@ -5,7 +5,7 @@ class FetchShoppingCartQuery(Query):
 
     def __init__(
             self,
-            shopping_cart_id: str,
+            shopping_cart_id: int,
     ) -> None:
         self.shopping_cart_id = shopping_cart_id
 

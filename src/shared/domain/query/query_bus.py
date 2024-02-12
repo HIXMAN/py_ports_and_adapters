@@ -1,8 +1,7 @@
-from typing import Set
+from typing import Set, Dict
 
 from shared.domain.query.query import Query
 from shared.domain.query.query_listener import QueryListener
-from shared.domain.query.query_response import QueryResult
 
 from injector import inject
 class Other:
@@ -21,7 +20,7 @@ class QueryBus:
     def remove_listener(self, listener: QueryListener) -> None:
         self.listeners.remove(listener)
 
-    def ask(self, query: Query) -> QueryResult:
+    def ask(self, query: Query) -> Dict:
         for listener in self.listeners:
             if listener.is_subscribed(query):
                 return listener.execute(query)

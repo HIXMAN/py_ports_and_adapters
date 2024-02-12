@@ -10,6 +10,6 @@ class JsonFetchShoppingCartAdapter(FetchShoppingCartAdapter):
             'status': shopping_cart.status.name,
             'lines': map(lambda line: {
                 'quantity': line.quantity,
-                'uuid': line.uuid,
+                'id': line.id,
             }, shopping_cart.lines)
         }
