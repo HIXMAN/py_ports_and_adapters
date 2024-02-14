@@ -1,4 +1,4 @@
-# Port and Adapter Pattern
+# Ports and Adapters Pattern
 
 ## Overview
 This repository serves as an experimental playground for understanding and implementing the Port and Adapter architectural pattern. It is not intended for production use but rather for educational purposes.
