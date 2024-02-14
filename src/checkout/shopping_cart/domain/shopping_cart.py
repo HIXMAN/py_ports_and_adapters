@@ -28,9 +28,4 @@ class ShoppingCart:
         if self.status != ShoppingCartStatus.IN_PROGRESS:
             raise ShoppingCartInvalidStatus(self.id, self.status)
         self.status = ShoppingCartStatus.COMPLETED
-
-
-        # self.lines = [
-        #     ShoppingCartLine(id=ShoppingCartLineId(2), quantity=ShoppingCartLineQuantity(4400)),
-        #     ShoppingCartLine(id=ShoppingCartLineId(3), quantity=ShoppingCartLineQuantity(5000)),
-        # ]
+        
