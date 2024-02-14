@@ -3,7 +3,8 @@ from shared.domain.domain_exception import DomainException
 
 
 class ShoppingCartNotFound(DomainException):
-    status_code = 400
-    detail = 'shopping cart'
     def __init__(self, id: ShoppingCartId):
-        super().__init__(f"Shopping cart with id [{id}] not found")
+        uuid = str(id.value())
+        self.detail = f"Shopping cart with id [{uuid}] not found"
+        self.status_code = 400
+        super().__init__(self.detail)

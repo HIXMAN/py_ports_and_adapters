@@ -29,6 +29,5 @@ class AlchemyShoppingCartRepository(ShoppingCartRepository):
 
     def save(self, shopping_cart: ShoppingCart) -> None:
         shopping_cart_model = ShoppingCartMapper.to_model(shopping_cart)
-
         self._session.merge(shopping_cart_model)
         self._session.commit()

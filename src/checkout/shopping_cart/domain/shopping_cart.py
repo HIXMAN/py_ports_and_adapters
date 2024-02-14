@@ -1,5 +1,6 @@
 from typing import List
 
+from checkout.shopping_cart.domain.error.shopping_cart_invalid_status import ShoppingCartInvalidStatus
 from checkout.shopping_cart.domain.shopping_cart_id import ShoppingCartId
 from checkout.shopping_cart.domain.shopping_cart_line import ShoppingCartLine
 from checkout.shopping_cart.domain.shopping_cart_line_id import ShoppingCartLineId
@@ -23,8 +24,13 @@ class ShoppingCart:
         self.lines = lines
 
     def pay(self):
+        print(self.status)
+        if self.status != ShoppingCartStatus.IN_PROGRESS:
+            raise ShoppingCartInvalidStatus(self.id, self.status)
         self.status = ShoppingCartStatus.COMPLETED
-        self.lines = [
-            ShoppingCartLine(id=ShoppingCartLineId(2), quantity=ShoppingCartLineQuantity(4400)),
-            ShoppingCartLine(id=ShoppingCartLineId(3), quantity=ShoppingCartLineQuantity(5000)),
-        ]
+
+
+        # self.lines = [
+        #     ShoppingCartLine(id=ShoppingCartLineId(2), quantity=ShoppingCartLineQuantity(4400)),
+        #     ShoppingCartLine(id=ShoppingCartLineId(3), quantity=ShoppingCartLineQuantity(5000)),
+        # ]

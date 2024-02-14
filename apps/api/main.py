@@ -1,8 +1,7 @@
-from fastapi import FastAPI, Query, HTTPException
-from fastapi.responses import UJSONResponse
+from fastapi import FastAPI, Query
 from injector import Module, Injector
-from pydantic import BaseModel
 from sqlalchemy.orm import Session
+from starlette.responses import JSONResponse
 
 from checkout.shopping_cart.domain.shopping_cart_repository import ShoppingCartRepository
 from checkout.shopping_cart.infrastructure.interface_adapter.json_fetch_shopping_cart_adapter import \
@@ -39,9 +38,11 @@ class AlchemyModule(Module):
 
 
 container = Injector([AlchemyModule(), RepositoryModule(), AdaptersModule()])
+
 command_bus: CommandBus = container.get(CommandBus)
 intent_payment: IntentPayment = container.get(IntentPayment)
 command_bus.add_listener(intent_payment)
+
 query_bus: QueryBus = container.get(QueryBus)
 fetch_shopping_cart: FetchShoppingCart = container.get(FetchShoppingCart)
 query_bus.add_listener(fetch_shopping_cart)
@@ -49,18 +50,14 @@ query_bus.add_listener(fetch_shopping_cart)
 
 @app.exception_handler(DomainException)
 async def http_exception_handler(request, exc):
-    return UJSONResponse(
-        status_code=exc.status_code,
-        content={"message": exc.detail}
-    )
+    return JSONResponse(status_code=exc.status_code, content={'message': exc.detail})
 
 
 @app.get("/intent-payment/")
-def intent_payment():
-    intent_payment_command = IntentPaymentCommand(1)
+def intent_payment(id: str = Query(..., description="")):
+    intent_payment_command = IntentPaymentCommand(int(id))
     command_bus.publish(intent_payment_command)
     return {"ok"}
-
 
 @app.get("/fetch-shopping-cart/")
 def fetch_shopping_cart(id: str = Query(..., description="")):
