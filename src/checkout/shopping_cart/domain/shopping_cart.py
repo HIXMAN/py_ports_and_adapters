@@ -24,13 +24,11 @@ class ShoppingCart:
         self.lines = lines
 
     def pay(self):
-        print(self.status)
         if self.status != ShoppingCartStatus.IN_PROGRESS:
             raise ShoppingCartInvalidStatus(self.id, self.status)
         self.status = ShoppingCartStatus.COMPLETED
 
-
-        # self.lines = [
-        #     ShoppingCartLine(id=ShoppingCartLineId(2), quantity=ShoppingCartLineQuantity(4400)),
-        #     ShoppingCartLine(id=ShoppingCartLineId(3), quantity=ShoppingCartLineQuantity(5000)),
-        # ]
+    def add_line(self, line_id: ShoppingCartLineId,quantity: ShoppingCartLineQuantity):
+        if self.status == ShoppingCartStatus.COMPLETED:
+            raise ShoppingCartInvalidStatus(self.id, self.status)
+        self.lines.append(ShoppingCartLine(id=line_id, quantity=quantity))
