@@ -13,7 +13,7 @@ from checkout.shopping_cart.use_case.fetch_shopping_cart.fetch_shopping_cart imp
 from checkout.shopping_cart.use_case.fetch_shopping_cart.fetch_shopping_cart_query import FetchShoppingCartQuery
 from checkout.shopping_cart.use_case.intent_payment.intent_payment import IntentPayment
 from checkout.shopping_cart.use_case.intent_payment.intent_payment_command import IntentPaymentCommand
-from database.bootstrap import database_bootstrap
+from .database.bootstrap import database_bootstrap
 from shared.domain.command.command_bus import CommandBus
 from shared.domain.domain_exception import DomainException
 from shared.domain.query.query_bus import QueryBus
@@ -65,3 +65,6 @@ def fetch_shopping_cart(id: str = Query(..., description="")):
     return query_bus.ask(fetch_shopping_cart_query)
 
 
+@app.get("/")
+def get_home():
+    return {"msg":"Hello World"}

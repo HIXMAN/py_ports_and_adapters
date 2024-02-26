@@ -6,7 +6,6 @@ from checkout.shopping_cart.use_case.fetch_shopping_cart.fetch_shopping_adapter 
 
 class JsonFetchShoppingCartAdapter(FetchShoppingCartAdapter):
     def parse(self, shopping_cart: ShoppingCart) -> Dict:
-        print("woooooorks")
         return {
             'status': shopping_cart.status.name,
             'lines': [{'id': line.id.value(), 'quantity': line.quantity.value()} for line in shopping_cart.lines]
