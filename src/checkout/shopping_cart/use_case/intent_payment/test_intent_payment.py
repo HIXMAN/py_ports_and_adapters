@@ -8,6 +8,8 @@ from checkout.shopping_cart.domain.shopping_cart_id import ShoppingCartId
 from checkout.shopping_cart.domain.shopping_cart_repository import ShoppingCartRepository
 from checkout.shopping_cart.domain.shopping_cart_status import ShoppingCartStatus
 from checkout.shopping_cart.domain.shopping_cart_total_price import ShoppingCartTotalPrice
+from checkout.shopping_cart.test.mother.command.intent_payment_command_mother import IntentPaymentCommandMother
+from checkout.shopping_cart.test.mother.domain.shopping_cart_mother import ShoppingCartMother
 from checkout.shopping_cart.use_case.intent_payment.intent_payment import IntentPayment
 from checkout.shopping_cart.use_case.intent_payment.intent_payment_command import IntentPaymentCommand
 
@@ -21,25 +23,19 @@ class TestIntentPayment:
         return shopping_cart_repo_mock
 
     def test_intent_payment(self, shopping_cart_repository_mock):
-        shopping_cart = ShoppingCart(
-            id=ShoppingCartId(1),
-            status=ShoppingCartStatus.IN_PROGRESS,
-            total_price=ShoppingCartTotalPrice(10),
-            lines=[]
-        )
+        shopping_cart = ShoppingCartMother.create(status=ShoppingCartStatus.IN_PROGRESS)
         shopping_cart_repository_mock.find_by_id.return_value = shopping_cart
-        intent_payment_command = IntentPaymentCommand(1)
+        intent_payment_command = IntentPaymentCommandMother.create()
         intent_payment = IntentPayment(shopping_cart_repository_mock)
 
         intent_payment.execute(intent_payment_command)
 
-        # TODO: improve assert comparison
-        shopping_cart.status = ShoppingCartStatus.IN_PROGRESS
-        shopping_cart_repository_mock.save.assert_called_once_with(shopping_cart)
+        expected_shopping_cart = ShoppingCartMother.create(status=ShoppingCartStatus.COMPLETED)
+        shopping_cart_repository_mock.save.assert_called_once_with(expected_shopping_cart)
 
 
     def test_should_not_intent_payment_with_not_found_id(self, shopping_cart_repository_mock):
-        intent_payment_command = IntentPaymentCommand(1)
+        intent_payment_command = IntentPaymentCommandMother.create()
 
         intent_payment = IntentPayment(shopping_cart_repository_mock)
         with pytest.raises(ShoppingCartNotFound):

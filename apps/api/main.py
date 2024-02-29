@@ -4,7 +4,7 @@ from sqlalchemy.orm import Session
 from starlette.responses import JSONResponse
 
 from checkout.shopping_cart.domain.shopping_cart_repository import ShoppingCartRepository
-from checkout.shopping_cart.infrastructure.interface_adapter.json_fetch_shopping_cart_adapter import \
+from checkout.shopping_cart.infrastructure.interface_adapter.json.json_fetch_shopping_cart_adapter import \
     JsonFetchShoppingCartAdapter
 from checkout.shopping_cart.infrastructure.sqlalchemy.alchemy_shopping_cart_repository import \
     AlchemyShoppingCartRepository

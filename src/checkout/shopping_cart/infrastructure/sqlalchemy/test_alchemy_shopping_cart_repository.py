@@ -1,18 +1,15 @@
 import pytest
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session
 
-from checkout.shopping_cart.domain.shopping_cart import ShoppingCart
 from checkout.shopping_cart.domain.shopping_cart_id import ShoppingCartId
-from checkout.shopping_cart.domain.shopping_cart_line import ShoppingCartLine
-from checkout.shopping_cart.domain.shopping_cart_line_id import ShoppingCartLineId
-from checkout.shopping_cart.domain.shopping_cart_line_quantity import ShoppingCartLineQuantity
 from checkout.shopping_cart.domain.shopping_cart_status import ShoppingCartStatus
 from checkout.shopping_cart.domain.shopping_cart_total_price import ShoppingCartTotalPrice
 from checkout.shopping_cart.infrastructure.sqlalchemy.alchemy_shopping_cart_repository import \
     AlchemyShoppingCartRepository
-from sqlalchemy import create_engine
-from sqlalchemy.orm import Session
-
 from checkout.shopping_cart.infrastructure.sqlalchemy.entity.base import Base
+from checkout.shopping_cart.test.mother.domain.shopping_cart_line_mother import ShoppingCartLineMother
+from checkout.shopping_cart.test.mother.domain.shopping_cart_mother import ShoppingCartMother
 
 
 class TestAlchemyShoppingCartRepository:
@@ -54,56 +51,49 @@ class TestAlchemyShoppingCartRepository:
 
     def test_should_create_a_shopping_cart(self, shopping_cart_repository):
         expected_shopping_lines = [
-            ShoppingCartLine(ShoppingCartLineId(1), ShoppingCartLineQuantity(2)),
-            ShoppingCartLine(ShoppingCartLineId(2), ShoppingCartLineQuantity(2)),
+            ShoppingCartLineMother.create(id=1, quantity=10),
+            ShoppingCartLineMother.create(id=2, quantity=20),
         ]
+        expected_shopping_cart = ShoppingCartMother.create(lines=expected_shopping_lines)
 
-        expected_shopping_cart = ShoppingCart(
-            id=ShoppingCartId(1),
-            status=ShoppingCartStatus.COMPLETED,
-            total_price=ShoppingCartTotalPrice(7.31),
-            lines=expected_shopping_lines
-        )
         shopping_cart_repository.save(shopping_cart=expected_shopping_cart)
-        shopping_cart = shopping_cart_repository.find_by_id(expected_shopping_cart.id)
-        assert shopping_cart == expected_shopping_cart
-        assert shopping_cart.status == ShoppingCartStatus.COMPLETED
-        assert shopping_cart.total_price == expected_shopping_cart.total_price
-        assert shopping_cart.lines == expected_shopping_lines
+        shopping_cart = shopping_cart_repository.find_by_id(shopping_cart_id=expected_shopping_cart.id)
+
+        assert shopping_cart.status == ShoppingCartStatus.CREATED
+        assert shopping_cart.total_price ==  ShoppingCartTotalPrice(10.10)
+        assert shopping_cart.lines[0].id.value() == 1
+        assert shopping_cart.lines[0].quantity.value() == 10
+        assert shopping_cart.lines[1].id.value() == 2
+        assert shopping_cart.lines[1].quantity.value() == 20
 
 
     def test_should_update_shopping_cart(self, shopping_cart_repository):
         expected_shopping_lines = [
-            ShoppingCartLine(ShoppingCartLineId(1), ShoppingCartLineQuantity(70)),
-            ShoppingCartLine(ShoppingCartLineId(2), ShoppingCartLineQuantity(80)),
+            ShoppingCartLineMother.create(id=1, quantity=10),
+            ShoppingCartLineMother.create(id=2, quantity=20),
         ]
-
-        expected_shopping_cart = ShoppingCart(
-            id=ShoppingCartId(7),
-            status=ShoppingCartStatus.COMPLETED,
-            total_price=ShoppingCartTotalPrice(7.31),
-            lines=expected_shopping_lines
-        )
+        expected_shopping_cart = ShoppingCartMother.create(lines=expected_shopping_lines)
         shopping_cart_repository.save(shopping_cart=expected_shopping_cart)
-        shopping_cart = shopping_cart_repository.find_by_id(expected_shopping_cart.id)
 
-        shopping_cart.status = ShoppingCartStatus.IN_PROGRESS
-        shopping_cart.total_price = ShoppingCartTotalPrice(20.21)
         new_expected_lines = [
-            ShoppingCartLine(ShoppingCartLineId(3), ShoppingCartLineQuantity(20)),
-            ShoppingCartLine(ShoppingCartLineId(4), ShoppingCartLineQuantity(30)),
+            ShoppingCartLineMother.create(id=3, quantity=30),
+            ShoppingCartLineMother.create(id=4, quantity=40),
         ]
-
-        shopping_cart.lines = new_expected_lines
-        shopping_cart_repository.save(shopping_cart)
+        expected_shopping_cart = ShoppingCartMother.create(
+            status=ShoppingCartStatus.COMPLETED,
+            total_price=20.20,
+            lines=new_expected_lines
+        )
+        shopping_cart_repository.save(expected_shopping_cart)
         shopping_cart = shopping_cart_repository.find_by_id(expected_shopping_cart.id)
 
-        assert shopping_cart.status == ShoppingCartStatus.IN_PROGRESS
-        assert shopping_cart.total_price ==  ShoppingCartTotalPrice(20.21)
+        assert shopping_cart.status == ShoppingCartStatus.COMPLETED
+        assert shopping_cart.total_price ==  ShoppingCartTotalPrice(20.20)
+        assert len(shopping_cart.lines) == 2
         assert shopping_cart.lines[0].id.value() == 3
-        assert shopping_cart.lines[0].quantity.value() == 20
+        assert shopping_cart.lines[0].quantity.value() == 30
         assert shopping_cart.lines[1].id.value() == 4
-        assert shopping_cart.lines[1].quantity.value() == 30
+        assert shopping_cart.lines[1].quantity.value() == 40
 
     # def test_should_fail_when_shopping_cart_lines_are_incorrect(self):
     #     expected_shopping_lines = [
