@@ -37,7 +37,7 @@ class ShoppingCartMapper:
         shopping_cart_model = ShoppingCartModel(
             id=shopping_cart.id.value(),
             status=shopping_cart.status.value,
-            total_price=shopping_cart.total_price,
+            total_price=shopping_cart.total_price.value(),
             lines=lines
         )
 

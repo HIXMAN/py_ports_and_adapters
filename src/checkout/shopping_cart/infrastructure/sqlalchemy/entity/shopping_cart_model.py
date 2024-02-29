@@ -1,4 +1,4 @@
-from sqlalchemy import Column, String, Integer
+from sqlalchemy import Column, String, Integer, Float
 from sqlalchemy.orm import relationship
 
 from checkout.shopping_cart.infrastructure.sqlalchemy.entity.base import Base
@@ -10,7 +10,7 @@ class ShoppingCartModel(Base):
 
     id = Column(Integer, primary_key=True)
     status = Column(String(50), nullable=False)
-    total_price = Column(Integer, nullable=True)
+    total_price = Column(Float, nullable=True)
     lines = relationship(
         'ShoppingCartLineModel',
         order_by=ShoppingCartLineModel.id,

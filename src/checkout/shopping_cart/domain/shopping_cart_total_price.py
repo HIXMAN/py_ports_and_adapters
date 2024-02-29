@@ -1,5 +1,5 @@
-from shared.domain.number import Number
+from shared.domain.decimal_number import DecimalNumber
 
 
-class ShoppingCartTotalPrice(Number):
+class ShoppingCartTotalPrice(DecimalNumber):
     pass
