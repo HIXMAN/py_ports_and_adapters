@@ -1,6 +1,5 @@
-from typing import Dict
-
 from injector import inject
+from typing import Dict
 
 from checkout.shopping_cart.domain.error.shopping_cart_not_found import ShoppingCartNotFound
 from checkout.shopping_cart.domain.shopping_cart_id import ShoppingCartId

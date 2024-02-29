@@ -50,11 +50,7 @@ class TestAlchemyShoppingCartRepository:
         assert shopping_cart is None
 
     def test_should_create_a_shopping_cart(self, shopping_cart_repository):
-        expected_shopping_lines = [
-            ShoppingCartLineMother.create(id=1, quantity=10),
-            ShoppingCartLineMother.create(id=2, quantity=20),
-        ]
-        expected_shopping_cart = ShoppingCartMother.create(lines=expected_shopping_lines)
+        expected_shopping_cart = ShoppingCartMother.create()
 
         shopping_cart_repository.save(shopping_cart=expected_shopping_cart)
         shopping_cart = shopping_cart_repository.find_by_id(shopping_cart_id=expected_shopping_cart.id)
@@ -68,11 +64,7 @@ class TestAlchemyShoppingCartRepository:
 
 
     def test_should_update_shopping_cart(self, shopping_cart_repository):
-        expected_shopping_lines = [
-            ShoppingCartLineMother.create(id=1, quantity=10),
-            ShoppingCartLineMother.create(id=2, quantity=20),
-        ]
-        expected_shopping_cart = ShoppingCartMother.create(lines=expected_shopping_lines)
+        expected_shopping_cart = ShoppingCartMother.create()
         shopping_cart_repository.save(shopping_cart=expected_shopping_cart)
 
         new_expected_lines = [
@@ -87,6 +79,7 @@ class TestAlchemyShoppingCartRepository:
         shopping_cart_repository.save(expected_shopping_cart)
         shopping_cart = shopping_cart_repository.find_by_id(expected_shopping_cart.id)
 
+        assert shopping_cart.id == ShoppingCartId(1)
         assert shopping_cart.status == ShoppingCartStatus.COMPLETED
         assert shopping_cart.total_price ==  ShoppingCartTotalPrice(20.20)
         assert len(shopping_cart.lines) == 2

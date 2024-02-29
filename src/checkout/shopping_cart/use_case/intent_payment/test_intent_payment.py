@@ -3,11 +3,8 @@ from unittest import mock
 
 from checkout.shopping_cart.domain.error.shopping_cart_invalid_status import ShoppingCartInvalidStatus
 from checkout.shopping_cart.domain.error.shopping_cart_not_found import ShoppingCartNotFound
-from checkout.shopping_cart.domain.shopping_cart import ShoppingCart
-from checkout.shopping_cart.domain.shopping_cart_id import ShoppingCartId
 from checkout.shopping_cart.domain.shopping_cart_repository import ShoppingCartRepository
 from checkout.shopping_cart.domain.shopping_cart_status import ShoppingCartStatus
-from checkout.shopping_cart.domain.shopping_cart_total_price import ShoppingCartTotalPrice
 from checkout.shopping_cart.test.mother.command.intent_payment_command_mother import IntentPaymentCommandMother
 from checkout.shopping_cart.test.mother.domain.shopping_cart_mother import ShoppingCartMother
 from checkout.shopping_cart.use_case.intent_payment.intent_payment import IntentPayment
@@ -42,13 +39,13 @@ class TestIntentPayment:
             intent_payment.execute(intent_payment_command)
 
 
-    def test_should_not_intent_payment_without_in_progress_status(self, shopping_cart_repository_mock):
-        shopping_cart = ShoppingCart(
-            id=ShoppingCartId(1),
-            status=ShoppingCartStatus.COMPLETED,
-            total_price=ShoppingCartTotalPrice(10),
-            lines=[]
-        )
+    @pytest.mark.parametrize("status", [
+        ShoppingCartStatus.COMPLETED,
+        ShoppingCartStatus.CANCELLED,
+        ShoppingCartStatus.CREATED
+    ])
+    def test_should_not_intent_payment_without_in_progress_status(self, status, shopping_cart_repository_mock):
+        shopping_cart = ShoppingCartMother.create(status=status)
         shopping_cart_repository_mock.find_by_id.return_value = shopping_cart
         intent_payment_command = IntentPaymentCommand(1)
 

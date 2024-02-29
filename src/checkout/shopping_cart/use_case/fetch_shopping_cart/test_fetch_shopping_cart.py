@@ -1,13 +1,11 @@
 import pytest
 from unittest import mock
 
-from checkout.shopping_cart.domain.shopping_cart import ShoppingCart
-from checkout.shopping_cart.domain.shopping_cart_id import ShoppingCartId
+from checkout.shopping_cart.domain.error.shopping_cart_not_found import ShoppingCartNotFound
 from checkout.shopping_cart.domain.shopping_cart_repository import ShoppingCartRepository
-from checkout.shopping_cart.domain.shopping_cart_status import ShoppingCartStatus
-from checkout.shopping_cart.domain.shopping_cart_total_price import ShoppingCartTotalPrice
+from checkout.shopping_cart.test.mother.domain.shopping_cart_mother import ShoppingCartMother
+from checkout.shopping_cart.test.mother.query.fetch_shopping_cart_query_mother import FetchShoppingCartQueryMother
 from checkout.shopping_cart.use_case.fetch_shopping_cart.fetch_shopping_cart import FetchShoppingCart
-from checkout.shopping_cart.use_case.fetch_shopping_cart.fetch_shopping_cart_query import FetchShoppingCartQuery
 
 
 class TestFetchShoppingCart:
@@ -25,21 +23,21 @@ class TestFetchShoppingCart:
         return fetch_shopping_cart_adapter
 
     def test_fetch_shopping_cart(self, shopping_cart_repository_mock, fetch_shopping_cart_adapter_mock):
-        shopping_cart = ShoppingCart(
-            id=ShoppingCartId(1),
-            status=ShoppingCartStatus.IN_PROGRESS,
-            total_price=ShoppingCartTotalPrice(10),
-            lines=[]
-        )
+        shopping_cart = ShoppingCartMother.create()
         shopping_cart_repository_mock.find_by_id.return_value = shopping_cart
-        fetch_shopping_cart_query = FetchShoppingCartQuery(1)
+        fetch_shopping_cart_query = FetchShoppingCartQueryMother.create()
         fetch_shopping_cart = FetchShoppingCart(shopping_cart_repository_mock, fetch_shopping_cart_adapter_mock)
 
         fetch_shopping_cart.execute(fetch_shopping_cart_query)
-        shopping_cart_3 = ShoppingCart(
-            id=ShoppingCartId(1),
-            status=ShoppingCartStatus.IN_PROGRESS,
-            total_price=ShoppingCartTotalPrice(10),
-            lines=[]
-        )
-        fetch_shopping_cart_adapter_mock.parse.assert_called_once_with(shopping_cart_3)
+
+        fetch_shopping_cart_adapter_mock.parse.assert_called_once_with(shopping_cart)
+
+    def test_should_not_intent_payment_with_not_found_id(
+            self,
+            shopping_cart_repository_mock,
+            fetch_shopping_cart_adapter_mock
+    ):
+        fetch_shopping_cart_query = FetchShoppingCartQueryMother.create()
+        fetch_shopping_cart = FetchShoppingCart(shopping_cart_repository_mock, fetch_shopping_cart_adapter_mock)
+        with pytest.raises(ShoppingCartNotFound):
+            fetch_shopping_cart.execute(fetch_shopping_cart_query)
