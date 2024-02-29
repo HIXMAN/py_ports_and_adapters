@@ -1,3 +1,5 @@
+import pytest
+
 from checkout.shopping_cart.domain.shopping_cart import ShoppingCart
 from checkout.shopping_cart.domain.shopping_cart_id import ShoppingCartId
 from checkout.shopping_cart.domain.shopping_cart_line import ShoppingCartLine
@@ -8,29 +10,49 @@ from checkout.shopping_cart.domain.shopping_cart_total_price import ShoppingCart
 from checkout.shopping_cart.infrastructure.sqlalchemy.alchemy_shopping_cart_repository import \
     AlchemyShoppingCartRepository
 from sqlalchemy import create_engine
-from sqlalchemy.orm import sessionmaker, Session
+from sqlalchemy.orm import Session
 
 from checkout.shopping_cart.infrastructure.sqlalchemy.entity.base import Base
 
 
 class TestAlchemyShoppingCartRepository:
 
-    def setup_class(self):
-        engine = create_engine('mysql+pymysql://root:root@database:3306/test_mercaclean'  ,  echo=True)
-        Base.metadata.create_all(bind=engine)
-        create_session = sessionmaker(bind=engine)
-        self.session = create_session()
-        self.shopping_cart_repository = AlchemyShoppingCartRepository(self.session)
+    @pytest.fixture(scope="session")
+    def engine(self):
+        return create_engine('mysql+pymysql://root:root@database:3306/test_mercaclean'  ,  echo=True)
 
-    def teardown_class(self):
-        self.session.rollback()
-        self.session.close()
+    @pytest.fixture(scope="session")
+    def tables(self, engine):
+        Base.metadata.create_all(engine)
+        yield
+        Base.metadata.drop_all(engine)
 
-    def test_should_return_none_when_not_found_shopping_cart(self):
-        shopping_cart = self.shopping_cart_repository.find_by_id(ShoppingCartId(10))
+    @pytest.fixture
+    def dbsession(self, engine, tables):
+        """Returns an sqlalchemy session, and after the test tears down everything properly."""
+        connection = engine.connect()
+        # begin the nested transaction
+        transaction = connection.begin()
+        # use the connection with the already started transaction
+        session = Session(bind=connection)
+
+        yield session
+
+        session.close()
+        # roll back the broader transaction
+        transaction.rollback()
+        # put back the connection to the connection pool
+        connection.close()
+
+    @pytest.fixture
+    def shopping_cart_repository(self, dbsession):
+        return AlchemyShoppingCartRepository(dbsession)
+
+    def test_should_return_none_when_not_found_shopping_cart(self, shopping_cart_repository):
+        shopping_cart = shopping_cart_repository.find_by_id(ShoppingCartId(10))
         assert shopping_cart is None
 
-    def test_should_create_a_shopping_cart(self):
+    def test_should_create_a_shopping_cart(self, shopping_cart_repository):
         expected_shopping_lines = [
             ShoppingCartLine(ShoppingCartLineId(1), ShoppingCartLineQuantity(2)),
             ShoppingCartLine(ShoppingCartLineId(2), ShoppingCartLineQuantity(2)),
@@ -42,15 +64,15 @@ class TestAlchemyShoppingCartRepository:
             total_price=ShoppingCartTotalPrice(7.31),
             lines=expected_shopping_lines
         )
-        self.shopping_cart_repository.save(shopping_cart=expected_shopping_cart)
-        shopping_cart = self.shopping_cart_repository.find_by_id(expected_shopping_cart.id)
+        shopping_cart_repository.save(shopping_cart=expected_shopping_cart)
+        shopping_cart = shopping_cart_repository.find_by_id(expected_shopping_cart.id)
         assert shopping_cart == expected_shopping_cart
         assert shopping_cart.status == ShoppingCartStatus.COMPLETED
         assert shopping_cart.total_price == expected_shopping_cart.total_price
         assert shopping_cart.lines == expected_shopping_lines
 
 
-    def test_should_update_shopping_cart(self):
+    def test_should_update_shopping_cart(self, shopping_cart_repository):
         expected_shopping_lines = [
             ShoppingCartLine(ShoppingCartLineId(1), ShoppingCartLineQuantity(70)),
             ShoppingCartLine(ShoppingCartLineId(2), ShoppingCartLineQuantity(80)),
@@ -62,8 +84,8 @@ class TestAlchemyShoppingCartRepository:
             total_price=ShoppingCartTotalPrice(7.31),
             lines=expected_shopping_lines
         )
-        self.shopping_cart_repository.save(shopping_cart=expected_shopping_cart)
-        shopping_cart = self.shopping_cart_repository.find_by_id(expected_shopping_cart.id)
+        shopping_cart_repository.save(shopping_cart=expected_shopping_cart)
+        shopping_cart = shopping_cart_repository.find_by_id(expected_shopping_cart.id)
 
         shopping_cart.status = ShoppingCartStatus.IN_PROGRESS
         shopping_cart.total_price = ShoppingCartTotalPrice(20.21)
@@ -73,9 +95,9 @@ class TestAlchemyShoppingCartRepository:
         ]
         shopping_cart.lines = new_expected_lines
 
-        self.shopping_cart_repository.save(shopping_cart)
+        shopping_cart_repository.save(shopping_cart)
 
-        shopping_cart = self.shopping_cart_repository.find_by_id(expected_shopping_cart.id)
+        shopping_cart = shopping_cart_repository.find_by_id(expected_shopping_cart.id)
 
         assert shopping_cart == expected_shopping_cart
         assert shopping_cart.status == ShoppingCartStatus.IN_PROGRESS
