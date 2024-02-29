@@ -47,7 +47,7 @@ class TestIntentPayment:
     def test_should_not_intent_payment_without_in_progress_status(self, status, shopping_cart_repository_mock):
         shopping_cart = ShoppingCartMother.create(status=status)
         shopping_cart_repository_mock.find_by_id.return_value = shopping_cart
-        intent_payment_command = IntentPaymentCommand(1)
+        intent_payment_command = IntentPaymentCommandMother.create()
 
         intent_payment = IntentPayment(shopping_cart_repository_mock)
         with pytest.raises(ShoppingCartInvalidStatus):
