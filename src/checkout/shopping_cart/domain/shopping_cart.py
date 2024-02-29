@@ -5,9 +5,10 @@ from checkout.shopping_cart.domain.shopping_cart_id import ShoppingCartId
 from checkout.shopping_cart.domain.shopping_cart_line import ShoppingCartLine
 from checkout.shopping_cart.domain.shopping_cart_status import ShoppingCartStatus
 from checkout.shopping_cart.domain.shopping_cart_total_price import ShoppingCartTotalPrice
+from shared.domain.entity import Entity
 
 
-class ShoppingCart:
+class ShoppingCart(Entity):
 
     def __init__(
             self,
@@ -20,9 +21,6 @@ class ShoppingCart:
         self.status = status
         self.total_price = total_price
         self.lines = lines
-
-    def __eq__(self, other):
-        return self.id.value() == other.id.value()
 
     def pay(self):
         if self.status != ShoppingCartStatus.IN_PROGRESS:

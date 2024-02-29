@@ -1,8 +1,9 @@
 from checkout.shopping_cart.domain.shopping_cart_line_id import ShoppingCartLineId
 from checkout.shopping_cart.domain.shopping_cart_line_quantity import ShoppingCartLineQuantity
+from shared.domain.entity import Entity
 
 
-class ShoppingCartLine:
+class ShoppingCartLine(Entity):
 
     def __init__(
             self,
@@ -11,6 +12,3 @@ class ShoppingCartLine:
     ):
         self.id = id
         self.quantity = quantity
-
-    def __eq__(self, other: "ShoppingCartLine"):
-        return self.id == other.id

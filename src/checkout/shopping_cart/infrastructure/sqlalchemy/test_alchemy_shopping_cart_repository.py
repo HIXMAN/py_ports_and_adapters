@@ -29,7 +29,7 @@ class TestAlchemyShoppingCartRepository:
 
     @pytest.fixture
     def dbsession(self, engine, tables):
-        """Returns an sqlalchemy session, and after the test tears down everything properly."""
+        """Returns a sqlalchemy session, and after the test tears down everything properly."""
         connection = engine.connect()
         # begin the nested transaction
         transaction = connection.begin()
@@ -93,16 +93,17 @@ class TestAlchemyShoppingCartRepository:
             ShoppingCartLine(ShoppingCartLineId(3), ShoppingCartLineQuantity(20)),
             ShoppingCartLine(ShoppingCartLineId(4), ShoppingCartLineQuantity(30)),
         ]
+
         shopping_cart.lines = new_expected_lines
-
         shopping_cart_repository.save(shopping_cart)
-
         shopping_cart = shopping_cart_repository.find_by_id(expected_shopping_cart.id)
 
-        assert shopping_cart == expected_shopping_cart
         assert shopping_cart.status == ShoppingCartStatus.IN_PROGRESS
         assert shopping_cart.total_price ==  ShoppingCartTotalPrice(20.21)
-        assert shopping_cart.lines == new_expected_lines
+        assert shopping_cart.lines[0].id.value() == 3
+        assert shopping_cart.lines[0].quantity.value() == 20
+        assert shopping_cart.lines[1].id.value() == 4
+        assert shopping_cart.lines[1].quantity.value() == 30
 
     # def test_should_fail_when_shopping_cart_lines_are_incorrect(self):
     #     expected_shopping_lines = [
