@@ -10,4 +10,4 @@ class ShoppingCartLineModel(Base):
     id = Column(Integer, primary_key=True)
     quantity = Column(Integer, nullable=False)
     cart_id = Column(Integer, ForeignKey('shopping_cart.id'), nullable=False)
-    shopping_cart = relationship('ShoppingCartModel', back_populates="lines")
+    shopping_cart = relationship('ShoppingCartModel', back_populates="lines", cascade="save-update")

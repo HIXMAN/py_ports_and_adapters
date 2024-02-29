@@ -11,3 +11,6 @@ class ShoppingCartLine:
     ):
         self.id = id
         self.quantity = quantity
+
+    def __eq__(self, other: "ShoppingCartLine"):
+        return self.id == other.id

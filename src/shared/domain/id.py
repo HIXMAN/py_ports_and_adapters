@@ -5,3 +5,6 @@ class Id:
 
     def value(self) -> int:
         return self._value
+
+    def __eq__(self, other: "Id") -> bool:
+        return self._value == other.value()

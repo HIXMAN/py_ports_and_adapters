@@ -1,5 +1,3 @@
-from pip._vendor.rich.pretty import pprint
-
 from checkout.shopping_cart.domain.shopping_cart import ShoppingCart
 from checkout.shopping_cart.domain.shopping_cart_id import ShoppingCartId
 from checkout.shopping_cart.domain.shopping_cart_line import ShoppingCartLine
@@ -27,18 +25,18 @@ class ShoppingCartMapper:
 
     @staticmethod
     def to_model(shopping_cart: ShoppingCart) -> ShoppingCartModel:
-
-        lines = [ShoppingCartLineModel(
-            id=line.id.value(),
-            quantity=line.quantity,
-            cart_id=shopping_cart.id.value()
-        ) for line in shopping_cart.lines]
-
         shopping_cart_model = ShoppingCartModel(
             id=shopping_cart.id.value(),
             status=shopping_cart.status.value,
             total_price=shopping_cart.total_price.value(),
-            lines=lines
         )
+        lines = [ShoppingCartLineModel(
+            id=line.id.value(),
+            quantity=line.quantity.value(),
+            cart_id=shopping_cart.id.value()
+        ) for line in shopping_cart.lines]
+
+        shopping_cart_model.lines=lines
+
 
         return shopping_cart_model

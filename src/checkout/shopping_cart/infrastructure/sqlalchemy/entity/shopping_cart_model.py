@@ -15,6 +15,6 @@ class ShoppingCartModel(Base):
         'ShoppingCartLineModel',
         order_by=ShoppingCartLineModel.id,
         back_populates="shopping_cart",
-        cascade="all"
-    )
+        cascade="all, delete-orphan"
+        )
 
