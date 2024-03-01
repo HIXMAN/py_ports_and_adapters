@@ -24,4 +24,3 @@ class CommandBus:
         for listener in self.listeners:
             if listener.is_subscribed(command):
                 listener.execute(command)
-        self._session.commit()
