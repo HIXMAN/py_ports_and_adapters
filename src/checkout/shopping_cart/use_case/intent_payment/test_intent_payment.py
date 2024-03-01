@@ -8,7 +8,6 @@ from checkout.shopping_cart.domain.shopping_cart_status import ShoppingCartStatu
 from checkout.shopping_cart.test.mother.command.intent_payment_command_mother import IntentPaymentCommandMother
 from checkout.shopping_cart.test.mother.domain.shopping_cart_mother import ShoppingCartMother
 from checkout.shopping_cart.use_case.intent_payment.intent_payment import IntentPayment
-from checkout.shopping_cart.use_case.intent_payment.intent_payment_command import IntentPaymentCommand
 
 
 class TestIntentPayment:

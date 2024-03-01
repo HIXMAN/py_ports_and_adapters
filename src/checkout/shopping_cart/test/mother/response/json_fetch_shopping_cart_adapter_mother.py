@@ -6,6 +6,7 @@ class JsonFetchShoppingCartAdapterMother:
     def create(
         id: int = 1,
         status: str = "CREATED",
+        total_price: float = 10.1,
         lines: Dict = [
             {
                 "id": 1,
@@ -20,5 +21,6 @@ class JsonFetchShoppingCartAdapterMother:
         return {
             "id": id,
             "status": status,
+            "total_price": total_price,
             "lines": lines
         }

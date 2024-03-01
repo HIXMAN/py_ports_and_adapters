@@ -9,6 +9,7 @@ class JsonFetchShoppingCartAdapter(FetchShoppingCartAdapter):
         return {
             'id': shopping_cart.id.value(),
             'status': shopping_cart.status.name,
+            'total_price': shopping_cart.total_price.value(),
             'lines': [
                 {
                     'id': line.id.value(),

@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from apps.api.main import app
 from checkout.shopping_cart.domain.shopping_cart import ShoppingCart
 from checkout.shopping_cart.domain.shopping_cart_id import ShoppingCartId
+from checkout.shopping_cart.domain.shopping_cart_status import ShoppingCartStatus
 from checkout.shopping_cart.infrastructure.sqlalchemy.alchemy_shopping_cart_repository import \
     AlchemyShoppingCartRepository
 from checkout.shopping_cart.test.mother.domain.shopping_cart_mother import ShoppingCartMother
@@ -14,7 +15,7 @@ from checkout.shopping_cart.test.mother.response.json_fetch_shopping_cart_adapte
     JsonFetchShoppingCartAdapterMother
 
 
-class TestFetchShoppingCart:
+class TestIntentPayment:
 
     @pytest.fixture()
     def client(self):
@@ -54,11 +55,10 @@ class TestFetchShoppingCart:
 
     @pytest.fixture
     def shopping_cart(self, shopping_cart_repository):
-        shopping_cart = ShoppingCartMother.create()
+        shopping_cart = ShoppingCartMother.create(status=ShoppingCartStatus.IN_PROGRESS)
         shopping_cart_repository.save(shopping_cart)
         return shopping_cart_repository.find_by_id(ShoppingCartId(1))
 
-    def test_fetch_shopping_cart(self, client, shopping_cart: ShoppingCart):
-        response = client.get(f"/fetch-shopping-cart/?id={shopping_cart.id.value()}")
+    def test_intent_payment(self, client, shopping_cart: ShoppingCart):
+        response = client.get(f"/intent-payment/?id={shopping_cart.id.value()}")
         assert response.status_code == 200
-        assert response.json() == JsonFetchShoppingCartAdapterMother.create()

@@ -53,6 +53,8 @@ async def http_exception_handler(request, exc):
     return JSONResponse(status_code=exc.status_code, content={'message': exc.detail})
 
 
+
+
 @app.get("/intent-payment/")
 def intent_payment(id: str = Query(..., description="")):
     intent_payment_command = IntentPaymentCommand(int(id))
