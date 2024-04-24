@@ -13,7 +13,7 @@ from checkout.shopping_cart.use_case.fetch_shopping_cart.fetch_shopping_cart imp
 from checkout.shopping_cart.use_case.fetch_shopping_cart.fetch_shopping_cart_query import FetchShoppingCartQuery
 from checkout.shopping_cart.use_case.intent_payment.intent_payment import IntentPayment
 from checkout.shopping_cart.use_case.intent_payment.intent_payment_command import IntentPaymentCommand
-from .database.bootstrap import database_bootstrap
+from database.bootstrap import database_bootstrap
 from shared.domain.command.command_bus import CommandBus
 from shared.domain.domain_exception import DomainException
 from shared.domain.query.query_bus import QueryBus
@@ -51,8 +51,6 @@ query_bus.add_listener(fetch_shopping_cart)
 @app.exception_handler(DomainException)
 async def http_exception_handler(request, exc):
     return JSONResponse(status_code=exc.status_code, content={'message': exc.detail})
-
-
 
 
 @app.get("/intent-payment/")
