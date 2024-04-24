@@ -15,8 +15,8 @@ class ShoppingCartMother:
         status: ShoppingCartStatus = ShoppingCartStatus.CREATED,
         total_price: float = 10.10,
         lines: List[ShoppingCartLine] = [
-            ShoppingCartLineMother.create(id=1, quantity=10),
-            ShoppingCartLineMother.create(id=2, quantity=20),
+            ShoppingCartLineMother.create(id=1, quantity=4),
+            ShoppingCartLineMother.create(id=2, quantity=3),
         ]
     ) -> ShoppingCart:
         return ShoppingCart(
