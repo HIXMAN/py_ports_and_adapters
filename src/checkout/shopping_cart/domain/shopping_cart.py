@@ -26,4 +26,7 @@ class ShoppingCart(Entity):
         if self.status != ShoppingCartStatus.IN_PROGRESS:
             raise ShoppingCartInvalidStatus(self.id, self.status)
         self.status = ShoppingCartStatus.COMPLETED
+
+    def add_line(self, line: ShoppingCartLine):
+        self.lines.append(line)
         
