@@ -9,10 +9,8 @@ from checkout.shopping_cart.domain.shopping_cart_id import ShoppingCartId
 from checkout.shopping_cart.domain.shopping_cart_status import ShoppingCartStatus
 from checkout.shopping_cart.infrastructure.sqlalchemy.alchemy_shopping_cart_repository import \
     AlchemyShoppingCartRepository
-from checkout.shopping_cart.test.mother.domain.shopping_cart_mother import ShoppingCartMother
 from checkout.shopping_cart.infrastructure.sqlalchemy.entity.base import Base
-from checkout.shopping_cart.test.mother.response.json_fetch_shopping_cart_adapter_mother import \
-    JsonFetchShoppingCartAdapterMother
+from checkout.shopping_cart.test.mother.domain.shopping_cart_mother import ShoppingCartMother
 
 
 class TestIntentPayment:
@@ -24,7 +22,7 @@ class TestIntentPayment:
 
     @pytest.fixture(scope="session")
     def engine(self):
-        return create_engine('mysql+pymysql://root:root@database:3306/test_mercaclean'  ,  echo=True)
+        return create_engine('mysql+pymysql://root:root@database:3306/test_mercaclean',  echo=True)
 
     @pytest.fixture(scope="session")
     def tables(self, engine):
